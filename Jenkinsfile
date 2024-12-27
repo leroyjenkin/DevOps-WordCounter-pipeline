@@ -17,8 +17,8 @@ pipeline {
             steps {
                 withAWS(credentials: '90ef7f7a-a4e3-48ce-9e0a-2ecfb25ca894', region: 'eu-central-1') {
                     sh 'aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 703671940174.dkr.ecr.eu-central-1.amazonaws.com/word-counter'
-                    sh 'docker tag word-counter:latest 703671940174.dkr.ecr.eu-central-1.amazonaws.com/word-counter/jenkins:latest'
-                    sh 'docker push 703671940174.dkr.ecr.eu-central-1.amazonaws.com/word-counter/jenkins:latest'
+                    sh 'docker tag word-counter:latest 703671940174.dkr.ecr.eu-central-1.amazonaws.com/word-counter'
+                    sh 'docker push 703671940174.dkr.ecr.eu-central-1.amazonaws.com/word-counter'
                 }
             }
         }
