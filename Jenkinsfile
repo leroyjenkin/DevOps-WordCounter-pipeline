@@ -25,41 +25,25 @@ pipeline {
           
         stage('K8S Deploy') {
             steps {
-                script {
-                    withAWS(credentials: '90ef7f7a-a4e3-48ce-9e0a-2ecfb25ca894', region: 'eu-central-1') {
-                        sh 'aws eks update-kubeconfig --name education-eks-ZBfKt5kw --region eu-central-1'
-                        sh 'kubectl apply -f EKS-Deployment.yaml'
-                    }
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: '90ef7f7a-a4e3-48ce-9e0a-2ecfb25ca894',
+                        usernameVariable: 'AWS_ACCESS_KEY_ID',
+                        passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                    )
+                ]) {
+                    sh '''
+                        aws eks update-kubeconfig --name education-eks-ZBfKt5kw --region eu-central-1
+                        kubectl apply -f EKS-Deployment.yaml
+                    '''
                 }
             }
         }
-
-        stage('K8S Deploy') {
-
-            steps {
-
-                script {
-
-                    withAWS(credentials: '90ef7f7a-a4e3-48ce-9e0a-2ecfb25ca894', region: 'eu-central-1') {
-
-                        sh 'aws eks update-kubeconfig --name education-eks-ZBfKt5kw --region eu-central-1'
-
-                        sh 'kubectl apply -f EKS-Deployment.yaml'
-
-                    }
-
-                }
-
-            }
-
-        }
-
 
         stage('Get Service URL') {
-
             steps {
-
                 script {
+                    def serviceUrl = ""
 
                     def serviceUrl = ""
 
