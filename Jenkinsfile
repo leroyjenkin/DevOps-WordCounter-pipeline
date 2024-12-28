@@ -27,7 +27,7 @@ pipeline {
             steps {
                 withCredentials([aws(credentialsId: '90ef7f7a-a4e3-48ce-9e0a-2ecfb25ca894')]) {
                     sh '''
-                        aws eks update-kubeconfig --name education-eks-ZBfKt5kw --region eu-central-1
+                        aws eks update-kubeconfig --name education-eks-b0BaIgZZ --region eu-central-1
                         kubectl apply -f EKS-Deployment.yaml
                     '''
                 }
