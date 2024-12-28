@@ -35,19 +35,21 @@ pipeline {
         }
         stage('Get Service URL') {
             steps {
-                script {
-                    def serviceUrl = ""
-                    // Wait for the LoadBalancer IP to be assigned
-                    timeout(time: 5, unit: 'MINUTES') {
-                        while(serviceUrl == "") {
-                            serviceUrl = sh(script: "kubectl get svc word-counter-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'", returnStdout: true).trim()
-                            if(serviceUrl == "") {
-                                echo "Waiting for the LoadBalancer IP..."
-                                sleep 10
+                withCredentials([aws(credentialsId: '90ef7f7a-a4e3-48ce-9e0a-2ecfb25ca894')]) {
+                    script {
+                        def serviceUrl = ""
+                        // Wait for the LoadBalancer IP to be assigned
+                        timeout(time: 5, unit: 'MINUTES') {
+                            while(serviceUrl == "") {
+                                serviceUrl = sh(script: "kubectl get svc word-counter-service -o jsonpath='{.status.loadBalancer.ingress[0].hostname}'", returnStdout: true).trim()
+                                if(serviceUrl == "") {
+                                    echo "Waiting for the LoadBalancer IP..."
+                                    sleep 10
+                                }
                             }
                         }
+                        echo "Service URL: http://${serviceUrl}"
                     }
-                    echo "Service URL: http://${serviceUrl}"
                 }
             }
         }
