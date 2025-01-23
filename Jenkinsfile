@@ -7,11 +7,13 @@ pipeline {
                 checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/leroyjenkin/DevOps-WordCounter-pipeline']])
             }
         }
+        
         stage('Building image') {
             steps {
                 sh 'docker build -t word-counter .'
             }
         }
+        
         stage('Pushing to ECR') {
             steps {
                 withCredentials([aws(credentialsId: '90ef7f7a-a4e3-48ce-9e0a-2ecfb25ca894')]) {
@@ -23,6 +25,7 @@ pipeline {
                 }
             }
         }
+        
         stage('K8S Deploy') {
             steps {
                 withCredentials([aws(credentialsId: '90ef7f7a-a4e3-48ce-9e0a-2ecfb25ca894')]) {
@@ -33,6 +36,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Get Service URL') {
             steps {
                 withCredentials([aws(credentialsId: '90ef7f7a-a4e3-48ce-9e0a-2ecfb25ca894')]) {
